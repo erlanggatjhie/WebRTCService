@@ -13,5 +13,25 @@ describe RoomController do
     it "should add the right details" do
       Room.find(1).offerer_sdp.should == "offerer_sdp"
     end
+
+    it "should render json object" do
+      response.body.should == "{\"id\":1,\"answerer_sdp\":null,\"offerer_sdp\":\"offerer_sdp\"}"
+    end
+  end
+
+  context "join" do
+    before(:each) do
+      @room = Room.create(offerer_sdp: "offerer_sdp")
+      post :join, {format: :json, id: @room.id, answerer_sdp: "answerer sdp"}
+    end
+
+    it "should update answerer sdp" do
+      room = Room.find(@room.id)
+      room.answerer_sdp.should == "answerer sdp"
+    end
+
+    it "should render json object" do
+      response.body.should == "{\"id\":#{@room.id},\"answerer_sdp\":\"answerer sdp\",\"offerer_sdp\":\"offerer_sdp\"}"
+    end
   end
 end
