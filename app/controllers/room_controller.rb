@@ -1,9 +1,17 @@
 class RoomController < ApplicationController
   def create
-    room = Room.create(offerer_sdp: params[:offerer_sdp])
+    success = false
 
+    if (Room.count == 0)
+      success = true if Room.create(offerer_sdp: params[:offerer_sdp])
+    else
+      room = Room.first
+      room.offerer_sdp = params[:offerer_sdp]
+      success = room.save
+    end  
+  
     respond_to do |format|
-      format.json { render json: room.to_json(only: [:id, :offerer_sdp, :answerer_sdp]) }
+      format.json { render json: success }
     end
   end
 

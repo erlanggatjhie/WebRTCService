@@ -5,10 +5,20 @@ describe RoomController do
     it "should create room" do
       room = stub_model(Room)
       room.offerer_sdp = "offerer sdp"
+      Room.stub(:count).and_return(0)
       Room.stub(:create).and_return(room)
-      
       post :create, { format: :json, offerer_sdp: room.offerer_sdp } 
-      response.body.should == "{\"id\":#{room.id},\"answerer_sdp\":null,\"offerer_sdp\":\"#{room.offerer_sdp}\"}"
+      response.body.should == "true"
+    end
+
+    it "should update offerer sdp when room exist" do
+      room = stub_model(Room)
+      room.offerer_sdp = "offerer sdp"
+      
+      Room.stub(:count).and_return(1)
+      Room.stub(:first).and_return(room) 
+      expect { post:create, { format: :json, offerer_sdp: "updated offerer sdp" }}.to change{ room.offerer_sdp }.to("updated offerer sdp")
+      response.body.should == "true"
     end
   end
 
