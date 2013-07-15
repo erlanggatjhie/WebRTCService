@@ -12,15 +12,22 @@ describe RoomController do
     end
   end
 
-  context "join" do
-    it "should update room" do
-      room = stub_model(Room)
-      room.stub(:offerer_sdp).and_return("offerer sdp")
-    
-      Room.stub(:find).and_return(room)
+  context "connect" do
+    before(:each) do
+      @room = stub_model(Room)
+      @room.stub(:offerer_sdp).and_return("offerer sdp")
+      Room.stub(:count).and_return(1)
+      Room.stub(:first).and_return(@room)
 
-      post :join, { format: :json, answerer_sdp: "answerer sdp" }
-      response.body.should == "{\"id\":#{room.id},\"answerer_sdp\":\"answerer sdp\",\"offerer_sdp\":\"offerer sdp\"}"
+      post :connect, { format: :json, answerer_sdp: "answerer sdp" } 
+    end
+
+    it "should update answerer sdp" do
+      @room.answerer_sdp.should == "answerer sdp"
+    end
+
+    it "should get offerer sdp" do
+      response.body.should == "{\"offerer_sdp\":\"offerer sdp\"}"
     end
   end
 

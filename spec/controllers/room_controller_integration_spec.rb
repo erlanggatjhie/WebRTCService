@@ -19,19 +19,19 @@ describe RoomController do
     end
   end
 
-  context "join" do
+  context "connect" do
     before(:each) do
       @room = Room.create(offerer_sdp: "offerer_sdp")
-      post :join, {format: :json, id: @room.id, answerer_sdp: "answerer sdp"}
+      post :connect, {format: :json, answerer_sdp: "answerer sdp"}
     end
 
     it "should update answerer sdp" do
-      room = Room.find(@room.id)
+      room = Room.first
       room.answerer_sdp.should == "answerer sdp"
     end
 
     it "should render json object" do
-      response.body.should == "{\"id\":#{@room.id},\"answerer_sdp\":\"answerer sdp\",\"offerer_sdp\":\"offerer_sdp\"}"
+      response.body.should == "{\"offerer_sdp\":\"offerer_sdp\"}"
     end
   end
 
