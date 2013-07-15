@@ -23,4 +23,15 @@ describe RoomController do
       response.body.should == "{\"id\":#{room.id},\"answerer_sdp\":\"answerer sdp\",\"offerer_sdp\":\"offerer sdp\"}"
     end
   end
+
+  context "get_answerer_sdp" do
+    it "should fetch room" do 
+      room = stub_model(Room)
+      room.answerer_sdp = "answerer sdp"
+      Room.stub(:count).and_return(1)
+      Room.stub(:first).and_return(room)
+      get :get_answerer_sdp, { format: :json }
+      response.body.should == "{\"answerer_sdp\":\"answerer sdp\"}"
+    end
+  end
 end

@@ -34,4 +34,12 @@ describe RoomController do
       response.body.should == "{\"id\":#{@room.id},\"answerer_sdp\":\"answerer sdp\",\"offerer_sdp\":\"offerer_sdp\"}"
     end
   end
+
+  context "get_answerer_sdp" do
+    it "should get answerer sdp" do
+      Room.create(answerer_sdp: "answerer sdp")
+      get :get_answerer_sdp, { format: :json } 
+      response.body.should == "{\"answerer_sdp\":\"answerer sdp\"}"
+    end
+  end
 end
